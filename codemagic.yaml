@@ -1,0 +1,17 @@
+workflows:
+  ios-unsigned-build:
+    name: Build WiFi Generator (Unsigned IPA)
+    instance_type: mac_mini_m1
+    environment:
+      xcode: latest
+    scripts:
+      - name: Compile iOS App
+        script: |
+          xcodebuild build -project "WiFiKeyGenerator.xcodeproj" -target "WiFiKeyGenerator" -configuration Release -sdk iphoneos CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -derivedDataPath build_output
+      - name: Package into IPA file
+        script: |
+          mkdir -p Payload
+          cp -r build_output/Build/Products/Release-iphoneos/WiFiKeyGenerator.app Payload/
+          zip -qr WiFiKeyGenerator.ipa Payload
+    artifacts:
+      - WiFiKeyGenerator.ipa
