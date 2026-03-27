@@ -5,11 +5,16 @@ workflows:
     environment:
       xcode: latest
     scripts:
+      - name: Install Tools
+        script: |
+          # Install xcodegen using Homebrew
+          brew install xcodegen
       - name: Unzip Source Code
         script: |
           # Unzip the file we uploaded to GitHub
           unzip -q WiFiKeyGenerator_Xcode_Project.zip
           # Move the actual source folder up so Xcodegen can see it
+          # (Ignore the error if the folder is already correctly placed)
           mv WiFiKeyGenerator_Xcode_Project/WiFiKeyGenerator . || true
       - name: Generate Xcode Project
         script: |
