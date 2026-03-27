@@ -7,10 +7,21 @@ workflows:
     scripts:
       - name: Compile iOS App
         script: |
-          xcodebuild build -project "WiFiKeyGenerator.xcodeproj" -target "WiFiKeyGenerator" -configuration Release -sdk iphoneos CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -derivedDataPath build_output
+          # Use xcodebuild to build the app without code signing
+          xcodebuild build \
+            -project "WiFiKeyGenerator.xcodeproj" \
+            -scheme "WiFiKeyGenerator" \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath "build_output" \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
       - name: Package into IPA file
         script: |
+          # Create the IPA structure and zip it
           mkdir -p Payload
+          # The compiled app is inside the Release-iphoneos directory
           cp -r build_output/Build/Products/Release-iphoneos/WiFiKeyGenerator.app Payload/
           zip -qr WiFiKeyGenerator.ipa Payload
     artifacts:
