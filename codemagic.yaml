@@ -7,22 +7,17 @@ workflows:
     scripts:
       - name: Install Tools
         script: |
-          # Install xcodegen using Homebrew
           brew install xcodegen
       - name: Unzip Source Code
         script: |
-          # Unzip the file we uploaded to GitHub
           unzip -q WiFiKeyGenerator_Xcode_Project.zip
-          # Move the actual source folder up so Xcodegen can see it
-          # (Ignore the error if the folder is already correctly placed)
           mv WiFiKeyGenerator_Xcode_Project/WiFiKeyGenerator . || true
       - name: Generate Xcode Project
         script: |
-          # Use Xcodegen to create a fresh iOS 18 Xcode project on the fly!
+          # Generate the project with an auto-created Info.plist
           xcodegen generate
       - name: Compile iOS App
         script: |
-          # Build the newly generated project
           xcodebuild build \
             -project "WiFiKeyGenerator.xcodeproj" \
             -scheme "WiFiKeyGenerator" \
@@ -34,7 +29,6 @@ workflows:
             CODE_SIGNING_ALLOWED=NO
       - name: Package into IPA file
         script: |
-          # Create the IPA structure and zip it
           mkdir -p Payload
           cp -r build_output/Build/Products/Release-iphoneos/WiFiKeyGenerator.app Payload/
           zip -qr WiFiKeyGenerator.ipa Payload
