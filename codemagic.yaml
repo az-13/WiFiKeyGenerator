@@ -5,9 +5,13 @@ workflows:
     environment:
       xcode: latest
     scripts:
+      - name: Unzip Project
+        script: |
+          # Unzip the file we uploaded to GitHub
+          unzip -q WiFiKeyGenerator_Xcode_Project.zip
       - name: Compile iOS App
         script: |
-          # Use xcodebuild to build the app without code signing
+          # Build the unzipped project
           xcodebuild build \
             -project "WiFiKeyGenerator.xcodeproj" \
             -scheme "WiFiKeyGenerator" \
@@ -21,7 +25,6 @@ workflows:
         script: |
           # Create the IPA structure and zip it
           mkdir -p Payload
-          # The compiled app is inside the Release-iphoneos directory
           cp -r build_output/Build/Products/Release-iphoneos/WiFiKeyGenerator.app Payload/
           zip -qr WiFiKeyGenerator.ipa Payload
     artifacts:
