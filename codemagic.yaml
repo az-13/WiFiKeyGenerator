@@ -12,9 +12,35 @@ workflows:
         script: |
           unzip -q WiFiKeyGenerator_Xcode_Project.zip
           mv WiFiKeyGenerator_Xcode_Project/WiFiKeyGenerator . || true
+      - name: Setup Custom App Icon
+        script: |
+          # Create the iOS icon folder structure
+          mkdir -p WiFiKeyGenerator/Assets.xcassets/AppIcon.appiconset
+          
+          # Tell Xcode to use this single image for all icon sizes
+          cat << 'EOF' > WiFiKeyGenerator/Assets.xcassets/AppIcon.appiconset/Contents.json
+          {
+            "images" : [
+              {
+                "filename" : "icon.png",
+                "idiom" : "universal",
+                "platform" : "ios",
+                "size" : "1024x1024"
+              }
+            ],
+            "info" : { "author" : "xcode", "version" : 1 }
+          }
+          EOF
+          
+          # Copy your uploaded icon.png into the app
+          if [ -f "icon.png" ]; then
+            cp icon.png WiFiKeyGenerator/Assets.xcassets/AppIcon.appiconset/icon.png
+            echo "Custom icon applied successfully!"
+          else
+            echo "Warning: icon.png not found. Make sure it is named exactly icon.png."
+          fi
       - name: Generate Xcode Project
         script: |
-          # Generate the project with an auto-created Info.plist
           xcodegen generate
       - name: Compile iOS App
         script: |
