@@ -11,6 +11,8 @@ targets:
     info:
       path: Info.plist
       properties:
+        CFBundleDisplayName: "WiKeyzz"
+        CFBundleName: "WiKeyzz"
         UILaunchScreen: {}
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
